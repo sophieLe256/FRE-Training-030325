@@ -1,0 +1,77 @@
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+  background-color: #f4f4f4;
+  font-family: sans-serif;
+}
+
+/* Tweet Box */
+.tweet {
+  background-color: #fff;
+  border: 1px solid #cfd9de;
+  border-radius: 16px;
+  width: 40vw;
+  display: flex;
+  padding: 12px;
+  gap: 12px;
+}
+
+.tweet-content {
+  flex-grow: 1;
+}
+
+.tweet-header {
+  display: flex;
+  align-items: center;
+  font-size: 15px;
+  gap: 4px;
+}
+/* Profile Picture */
+.thumbnail {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+}
+
+/* Header */
+.name {
+  color: #000;
+  font-size: 15px;
+  font-weight: bold;
+  padding-left: 12px;
+}
+.metadata {
+  color: #71767b;
+}
+
+/* Message */
+.message {
+  color: #0f1419;
+  margin-top: 2px;
+  padding-left: 12px;
+}
+
+/* Action Row */
+.actions {
+  display: flex;
+  justify-content: space-between;
+  max-width: 425px;
+  margin-top: 8px;
+  padding-left: 12px;
+}
+.action {
+  align-items: center;
+  display: flex;
+  gap: 4px
+}
+.action svg {
+  color: #536471;
+}
+
+.action-count {
+  color: #536471;
+  font-size: 13px;
+}
