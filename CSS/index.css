@@ -1,0 +1,38 @@
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+
+.container {
+	color: blue;
+	border: 2rem solid black;
+	/* width: 1rem;
+	height: 1rem; */
+	width: 80vw;
+	height: 80vh;
+	background-color: black;
+	position: relative;
+}
+h1 {
+	background-color: yellow;
+	width: 200px;
+	height: 200px;
+	color: green;
+
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+}
+/* rem, em, vh, vw, % */
+/* .class1 .class2 {
+	color: red;
+}
+.class1,
+.class2 {
+	color: red;
+}
+.class1.class2 {
+	color: red;
+} */
