@@ -1,0 +1,11 @@
+<ng-container *ngIf="!!title">
+  <button
+    #btnRef
+    class="btn"
+    [ngClass]="{ 'btn-active': active, btn: !active }"
+    [disabled]="active"
+    (click)="toggle()"
+  >
+    {{ title }}
+  </button>
+</ng-container>
