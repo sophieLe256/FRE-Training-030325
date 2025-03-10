@@ -201,7 +201,8 @@
 // }
 // function Employee(name, age, company) {
 // 	// super(name, age);
-//   Person.call(this, name, age);
+//   // Person.call(this, name, age);
+//   Person.apply (this, [name, age]);
 // 	this.company = company;
 // }
 // // Employee.prototype = {...Person.prototype};
@@ -233,7 +234,7 @@
 //
 // * loop in JS: array, object
 // * MyForeach, MyMap, MyFilter, MyReduce
-// *  Object.values(); Object.keys(); Object.entries(); 
+// *  Object.values(); Object.keys(); Object.entries();
 // *
 // * destructure
 // *
@@ -386,15 +387,15 @@
 // console.log(rephello(4, 5, 6)); // 9
 
 // * object copy: shallow, clone(deepcopy)
-const obj = {
-	name: "TT",
-	age: 23,
-	arr: [1, 2, 3],
-	date: new Date(),
-	foo: function () {
-		console.log();
-	},
-};
+// const obj = {
+// 	name: "TT",
+// 	age: 23,
+// 	arr: [1, 2, 3],
+// 	date: new Date(),
+// 	foo: function () {
+// 		console.log();
+// 	},
+// };
 // const objcopy = {...obj};
 // objcopy.arr[0] = 100;
 
@@ -414,43 +415,43 @@ const obj = {
 // * Object.create()
 
 // ^ interview question~~~~~~~~~~~~~~~
-const names = [
-	{ userid: 2, name: "Velen" },
-	{ userid: 56, name: "Illidan" },
-	{ userid: 23, name: "Muradin" },
-	{ userid: 12, name: "Sylvanas" },
-	{ userid: 44, name: "Cenarius" },
-	{ userid: 4, name: "Gul'Dan" },
-];
-const roles = [
-	{ userid: 2, role: "Mage" },
-	{ userid: 4, role: "Worlock" },
-	{ userid: 56, role: "Demon Hunter" },
-	{ userid: 66, role: "Druid" },
-	{ userid: 87, role: "Shaman" },
-	{ userid: 12, role: "Hunter" },
-];
+// const names = [
+// 	{ userid: 2, name: "Velen" },
+// 	{ userid: 56, name: "Illidan" },
+// 	{ userid: 23, name: "Muradin" },
+// 	{ userid: 12, name: "Sylvanas" },
+// 	{ userid: 44, name: "Cenarius" },
+// 	{ userid: 4, name: "Gul'Dan" },
+// ];
+// const roles = [
+// 	{ userid: 2, role: "Mage" },
+// 	{ userid: 4, role: "Worlock" },
+// 	{ userid: 56, role: "Demon Hunter" },
+// 	{ userid: 66, role: "Druid" },
+// 	{ userid: 87, role: "Shaman" },
+// 	{ userid: 12, role: "Hunter" },
+// ];
 
-function solution(...args) {
-	let tar = [];
-	args.forEach((cur) => {
-		tar = [...tar, ...cur];
-	}); // [].concat()
-	console.log(tar);
+// function solution(...args) {
+// 	let tar = [];
+// 	args.forEach((cur) => {
+// 		tar = [...tar, ...cur];
+// 	}); // [].concat()
+// 	console.log(tar);
 
-	const map = {};
-	tar.forEach((ele) => {
-		map[ele.userid] = {
-			...{ name: null, userid: null, role: null },
-			...map[ele.userid],
-			...ele,
-		};
-	});
+// 	const map = {};
+// 	tar.forEach((ele) => {
+// 		map[ele.userid] = {
+// 			...{ name: null, userid: null, role: null },
+// 			...map[ele.userid],
+// 			...ele,
+// 		};
+// 	});
 
-	console.log(map);
-  return Object.values(map);
-}
-console.log(solution(names, roles));
+// 	console.log(map);
+//   return Object.values(map);
+// }
+// console.log(solution(names, roles));
 /* 
   2: {},
   66: {}
@@ -459,3 +460,173 @@ console.log(solution(names, roles));
 //   { userid: 2, name: "Velen", role: "Mage"},
 //   ...
 // ]
+
+// * iife
+// const API = (function () {
+// 	const getTodo = function () {
+// 		fetch("url").then();
+// 	};
+//   const deleteTodo = function () {
+// 		fetch("url").then();
+// 	};
+
+// 	return {
+// 		getTodo,
+//     deleteTodo
+// 	};
+// })();
+// }());
+
+// * currying
+// * closure
+// function foo(n) {
+//   const hello = 'hello';
+//   return function(m) {
+//     return n + m;
+//   }
+// }
+// const bar = foo(4); // n = 4, hello = 'hello'
+// const baz = foo(7); // n = 7, hello = 'hello'
+// console.log(bar(5)); // sum: 9
+// console.log(baz(5)); // sum: 12
+
+// function add(n) {
+//   return function(cur, i, self) {
+//     return cur + n;
+//   }
+// }
+
+// console.log([1, 2, 3].map(add(100)));
+
+// ^ interview question~~~~~~~~~~~~~~~
+// const sum = function (a, b) {
+// 	return a + b;
+// };
+// const cb = function (a, b, c, d) {
+// 	return a * b + c - d;
+// };
+
+// const fnForSum = limitedFunction(3, sum); // n = 3
+// const fnForCb = limitedFunction(5, cb); // n = 5
+
+// function limitedFunction(num, callback) {
+//   let counter = num;
+
+//   return function(...args) {
+
+//     if (counter > 0) {
+//       counter--;
+//       return callback(...args);
+//     } else {
+//       return 'over limited!';
+//     }
+//   }
+// }
+
+// console.log('for sum: ', fnForSum(4, 5)); // 9
+// console.log('for sum: ', fnForSum(4, 5)); // 9
+// console.log('for sum: ', fnForSum(4, 5)); // 9
+// console.log('for sum: ', fnForSum(4, 5)); // 9
+// console.log('for sum: ', fnForSum(4, 5)); // 9
+// console.log('for sum: ', fnForSum(4, 5)); // 9
+
+// console.log(fnForCb(4, 5, 1, 2)); // 9
+// console.log(fnForCb(4, 5, 1, 2)); // 9
+// console.log(fnForCb(4, 5, 1, 2)); // 9
+// console.log(fnForCb(4, 5, 1, 2)); // 9
+// console.log(fnForCb(4, 5, 1, 2)); // 9
+// console.log(fnForCb(4, 5, 1, 2)); // 9
+// console.log(fnForCb(4, 5, 1, 2)); // 9
+// console.log(fnForCb(4, 5, 1, 2)); // 9
+// console.log(fnForCb(4, 5, 1, 2)); // 9
+
+// ^ interview question~~~~~~~~~~~~~~~
+// const callback1 = (a) => a + 2; // 7
+// const callback2 = (b) => b * 2; // 14
+// const callback3 = (c) => c + 2; // 16
+
+// console.log(runAll(callback1, callback2, callback3)(1)); // 16
+
+// function runAll(...callbackArr) {
+// 	//[callback1, callback2, callback3]
+
+// 	return function (num) {
+// 		// let res = num;
+// 		// while (callbackArr.length) {
+// 		//   const fn = callbackArr.shift(); // push, pop, shift, unshift
+// 		//   res = fn(res);
+// 		//   console.log('res: ', res);
+// 		// }
+// 		// return res;
+// 		return callbackArr.reduce(function (res, fn) {
+// 			return fn(res);
+// 		}, num);
+// 	};
+// }
+
+// * this ----> object, be use in a function
+// * call, apply, bind
+
+// function(require, exports, module, __filename, __dirname) {
+//   function foo() {
+//     console.log(this); //
+//   }
+//   foo();
+// //}
+// // exports.hi = 'hi';
+// console.log(this); // module.exports
+// console.log(exports);
+// console.log(module.exports);
+// console.log(__filename);
+// console.log(__dirname);
+
+// const {foo: bar} = require("./test");
+// console.log(bar(100));
+
+// const obj = {
+//   name: 'TT',
+//   foo: function() {
+//     console.log('this in foo: ', this); //<-------------------
+
+//     // const bar = (function() {
+//     //   console.log('this in bar: ', this); // <------
+//     // }).bind(this); //<-------------------
+
+//     this
+//     const bar = () => {
+//       console.log('this in bar: ', this); // <------
+//     }
+//     bar();
+//   }
+// }
+// obj.foo();
+
+// * call, apply, bind
+// const obj = {
+//     pi: 3.14159265,
+//     getPi() {
+//         return this.pi;
+//     }
+// }
+// function printPi(num1, num2) { // 100
+//   console.log('from print: ', this.pi, num1, num2);
+// }
+// const newPrintPi = printPi.bind(obj); // lazy
+
+// printPi.call(obj, 4, 5); // eager 1 + 100
+// printPi.apply(obj, [4, 5]); // eager 1 + 1.length 100
+// newPrintPi(4, 5);
+// class Person {
+//   name = 'RR';
+//   walk() {
+//     this.name;
+//   }
+// }
+
+// // * arrow bind this auto, function
+// console.log([1, 2, 3].map((cur, i, self) => {
+//   console.log(this);
+//   return cur + this.age;
+// }, {age: 45}));
+
+// * event loop
