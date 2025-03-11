@@ -547,22 +547,22 @@
 
 // console.log(runAll(callback1, callback2, callback3)(1)); // 16
 
-// function runAll(...callbackArr) {
-// 	//[callback1, callback2, callback3]
+function runAll(...callbackArr) {
+	//[callback1, callback2, callback3]
 
-// 	return function (num) {
-// 		// let res = num;
-// 		// while (callbackArr.length) {
-// 		//   const fn = callbackArr.shift(); // push, pop, shift, unshift
-// 		//   res = fn(res);
-// 		//   console.log('res: ', res);
-// 		// }
-// 		// return res;
-// 		return callbackArr.reduce(function (res, fn) {
-// 			return fn(res);
-// 		}, num);
-// 	};
-// }
+	return function (num) {
+		let res = num;
+		while (callbackArr.length) {
+			const fn = callbackArr.shift(); // push, pop, shift, unshift
+			res = fn(res);
+			console.log("res: ", res);
+		}
+		return res;
+		// return callbackArr.reduce(function (res, fn) {
+		// 	return fn(res);
+		// }, num);
+	};
+}
 
 // * this ----> object, be use in a function
 // * call, apply, bind
@@ -582,21 +582,22 @@
 
 // const {foo: bar} = require("./test");
 // console.log(bar(100));
-
-// const obj = {
+// "use strict"
+// const obj = { // promise instance
 //   name: 'TT',
-//   foo: function() {
+//   foo: function() { // then
 //     console.log('this in foo: ', this); //<-------------------
 
-//     // const bar = (function() {
-//     //   console.log('this in bar: ', this); // <------
-//     // }).bind(this); //<-------------------
-
-//     this
-//     const bar = () => {
+//     const bar = function() {
 //       console.log('this in bar: ', this); // <------
-//     }
+//     } //<-------------------
+
+//     // this
+//     // const bar = () => {
+//     //   console.log('this in bar: ', this); // <------
+//     // }
 //     bar();
+//     return this;
 //   }
 // }
 // obj.foo();
@@ -630,3 +631,404 @@
 // }, {age: 45}));
 
 // * event loop
+// // var i = 0; // let
+// for (let i = 0; i < 5; i++) {
+//   // (function(v) {
+//   //   v = 0
+//   //   setTimeout(() => console.log(v), v * 1000);
+//   // })(i);
+//   setTimeout(() => console.log(i), (5 - i) * 1000);
+// } // 0, 1, 2, 3, 4 vs. 5, 5, 5, 5, 5
+// console.log('hello');
+
+/* 
+  call stack: [() => console.log(i), i = 4;] // closure: v = 0
+
+  web api: [
+     () => console.log(i), 5s, i = 0;
+  ]
+
+  task queue: [
+    
+     () => console.log(i), i = 3;
+      () => console.log(i), i = 2;
+       () => console.log(i), i = 1;
+        () => console.log(i), i = 0;
+  ]
+*/
+
+// * XHR
+// const url = "https://jsonplaceholder.typicode.com/todos";
+// const print = (res) => {
+// 	console.log("start print");
+// 	console.log(res);
+// 	console.log("end print");
+// };
+
+// function getDataFromBackend(url) {
+// 	return new Promise((resolve, reject) => {
+// 		const xhttp = new XMLHttpRequest();
+// 		xhttp.onreadystatechange = function () {
+// 			if (this.readyState == 4 && this.status == 200) {
+// 				resolve(JSON.parse(xhttp.response));
+// 			}
+// 		};
+// 		xhttp.open("GET", url);
+// 		xhttp.send();
+// 	});
+// }
+
+// 67, 12, 87
+// getDataFromBackend(`${url}/67`)
+// 	.then((data) => {
+// 		print(data);
+// 		return getDataFromBackend(`${url}/12`);
+// 	})
+// 	.then((data) => {
+// 		print(data);
+// 		return getDataFromBackend(`${url}/87`);
+// 	})
+// 	.then(console.log);
+// getDataFromBackend(`${url}/12`, print);
+// getDataFromBackend(`${url}/87`, print);
+
+// (async () => {
+//   print(await getDataFromBackend(`${url}/67`)); //5s
+//   print(await getDataFromBackend(`${url}/12`)); //4s
+//   print(await getDataFromBackend(`${url}/87`)); //6s
+// })(); // 15s; 6s
+
+console.log("hello world");
+
+// * callback function; callback hell
+// const foo = () => console.log("foo");
+// const randomNumber = () => Math.floor(Math.random() * 6);
+
+// const callFnInRandomTime = (callback) => {
+// 	const timer = randomNumber();
+// 	console.log(`${timer}s`);
+
+// 	setTimeout(callback, timer * 1000);
+// };
+
+// callFnInRandomTime(() => {
+//   callFnInRandomTime(() => {
+//     callFnInRandomTime(() => {
+//       callFnInRandomTime(() => {
+//         callFnInRandomTime(() => {
+//           callFnInRandomTime(() => {
+//             callFnInRandomTime(() => {
+//               callFnInRandomTime(() => {
+//                 callFnInRandomTime(() => {
+//                   foo();
+//                 });
+//               });
+//             });
+//           });
+//         });
+//       });
+//     });
+//   });
+// });
+// * Promise: ES6, let const, arrow function, class, promise
+
+// * MyPromise
+// class MyPromise {
+// 	thenCallbackQueue = [];
+// 	currentValue = undefined;
+
+// 	constructor(executor) {
+// 		executor(this.resolve.bind(this), this.reject);
+// 	}
+
+// 	resolve(resData) {
+// 		this.currentValue = resData;
+// 		// console.log("this is resolve: ", resData);
+// 		setTimeout(() => {
+// 			while (this.thenCallbackQueue.length) {
+// 				const fn = this.thenCallbackQueue.shift();
+// 				this.currentValue = fn(this.currentValue);
+// 			}
+// 		});
+// 		// console.log('console.log the name in promise: ', this.name);
+// 	}
+
+// 	reject = () => {
+// 		// console.log('console.log the name in promise: reject ', this.name);
+// 	};
+
+// 	then(thenFn) {
+// 		this.thenCallbackQueue.push(thenFn);
+// 		return this;
+// 	}
+// 	catch() {}
+// }
+
+// new MyPromise((resolve, reject) => {
+// 	console.log("hello"); // 1
+// 	resolve('hello from antra');
+// })
+// 	.then((data) => {
+// 		console.log(data); // 3
+// 		return data + 'hello';
+// 	})
+// 	.then((data) => {
+// 		console.log(data); // 3
+// 		return data + 'hello';
+// 	})
+// 	.then((data) => {
+// 		console.log(data); // 3
+// 		return data + 'hello';
+// 	})
+// 	.catch(() => {});
+
+// console.log(3); // 2
+
+// taskqueue ----> 3
+
+// const isThenable = (maybePromise) =>
+// 	maybePromise && typeof maybePromise.then === "function";
+
+// class MyPromise {
+// 	#statusGroup = {
+// 		PENDING: "pending",
+// 		FULFILLED: "fulfilled",
+// 		REJECTED: "rejected",
+// 	};
+
+// 	#status = this.#statusGroup.PENDING;
+// 	#value = undefined;
+// 	#reason = undefined;
+// 	#thenQueue = [];
+// 	#finallyQueue = [];
+
+// 	constructor(executor) {
+// 		if (typeof executor === "function") {
+// 			try {
+// 				executor(this.#resolve.bind(this), this.#reject.bind(this));
+// 			} catch (err) {
+// 				this.#reject(err);
+// 			}
+// 		}
+// 	}
+
+// 	#propagationResolved() {
+// 		setTimeout(() => {
+// 			this.#thenQueue.forEach(([controlledPromise, fulfilledFn]) => {
+// 				if (typeof fulfilledFn === "function") {
+// 					const valueOrPromise = fulfilledFn(this.#value);
+
+// 					if (isThenable(valueOrPromise)) {
+// 						valueOrPromise.then(
+// 							(value) => controlledPromise.#resolve(value),
+// 							(reason) => controlledPromise.#reject(reason)
+// 						);
+// 					} else {
+// 						controlledPromise.#resolve(valueOrPromise);
+// 					}
+// 				} else {
+// 					return controlledPromise.#resolve(this.#value);
+// 				}
+// 			});
+
+// 			this.#finallyQueue.forEach(
+// 				([controlledPromise, sideEffectFn]) => {
+// 					sideEffectFn();
+// 					controlledPromise.#resolve(this.#value);
+// 				}
+// 			);
+
+// 			this.#thenQueue = [];
+// 			this.#finallyQueue = [];
+// 		});
+// 	}
+
+// 	#propagationRejected() {
+// 		setTimeout(() => {
+// 			this.#thenQueue.forEach(([controlledPromise, _, catchFn]) => {
+// 				if (typeof catchFn === "function") {
+// 					const valueOrPromise = catchFn(this.#reason);
+
+// 					if (isThenable(valueOrPromise)) {
+// 						valueOrPromise.then(
+// 							(value) => controlledPromise.#resolve(value),
+// 							(reason) => controlledPromise.#reject(reason)
+// 						);
+// 					} else {
+// 						controlledPromise.#resolve(valueOrPromise);
+// 					}
+// 				} else {
+// 					return controlledPromise.#reject(this.#reason);
+// 				}
+// 			});
+
+// 			this.#finallyQueue.forEach(
+// 				([controlledPromise, sideEffectFn]) => {
+// 					sideEffectFn();
+// 					controlledPromise.#reject(this.#value);
+// 				}
+// 			);
+
+// 			this.#thenQueue = [];
+// 			this.#finallyQueue = [];
+// 		});
+// 	}
+
+// 	#resolve(value) {
+// 		if (this.#status === this.#statusGroup.PENDING) {
+// 			this.#status = this.#statusGroup.FULFILLED;
+// 			this.#value = value;
+// 			this.#propagationResolved();
+// 		}
+// 	}
+// 	#reject(reason) {
+// 		if (this.#status === this.#statusGroup.PENDING) {
+// 			this.#status = this.#statusGroup.REJECTED;
+// 			this.#reason = reason;
+// 			this.#propagationRejected();
+// 		}
+// 	}
+
+// 	then(fulfilledFn, catchFn) {
+// 		const controlledPromise = new MyPromise();
+// 		this.#thenQueue.push([controlledPromise, fulfilledFn, catchFn]);
+
+// 		if (this.#status === this.#statusGroup.FULFILLED) {
+// 			this.#propagationResolved();
+// 		} else if (this.#status === this.#statusGroup.REJECTED) {
+// 			this.#propagationRejected();
+// 		}
+
+// 		return controlledPromise;
+// 	}
+
+// 	catch(catchFn) {
+// 		return this.then(undefined, catchFn);
+// 	}
+
+// 	finally(sideEffectFn) {
+// 		if (this.#status !== this.#statusGroup.PENDING) {
+// 			sideEffectFn();
+
+// 			return this.#status === this.#statusGroup.FULFILLED
+// 				? MyPromise.resolve(this.#value)
+// 				: MyPromise.reject(this.#reason);
+// 		}
+
+// 		const controlledPromise = new MyPromise();
+// 		this.#finallyQueue.push([controlledPromise, sideEffectFn]);
+
+// 		return controlledPromise;
+// 	}
+
+// 	static resolve(val) {
+// 		return new MyPromise((res, _) => {
+// 			res(val);
+// 		});
+// 	}
+// 	static reject() {
+// 		return new MyPromise((_, rej) => {
+// 			rej(val);
+// 		});
+// 	}
+
+// 	static all(promiseArr) {
+// 		return new MyPromise((resolve, rej) => {
+// 			const resolvedArr = new Array(promiseArr.length);
+// 			let counter = 0;
+// 			promiseArr.forEach((p, i) => {
+//         if (p instanceof MyPromise) {
+//           p.then((d) => {
+//             resolvedArr[i] = d;
+//             counter++;
+//             if (counter === promiseArr.length) {
+//               resolve(resolvedArr);
+//             }
+// 					});
+// 				} else {
+//           resolvedArr[i] = p;
+//           counter++;
+//           if (counter === promiseArr.length) {
+//             resolve(resolvedArr);
+//           }
+// 				}
+// 			});
+// 		});
+// 	}
+// }
+
+// const promise1 = MyPromise.resolve(3);
+// const promise2 = 42;
+// const promise3 = new MyPromise((resolve, reject) => {
+// 	setTimeout(resolve, 100, "foo");
+// });
+
+// MyPromise.all([promise1, promise2, promise3]).then((values) => {
+// 	console.log(values);
+// });
+// Expected output: Array [3, 42, "foo"]
+
+// new Promise((res, rej) => {
+//   res(3)
+// }).then(data => {
+//   return new Promise((res) => {
+//     res(56)
+//   })
+// }).then(console.log);
+
+// * MyFetch
+
+const url = "https://jsonplaceholder.typicode.com/todos";
+const print = (res) => {
+	console.log("start print");
+	console.log(res);
+	console.log("end print");
+};
+
+function myFetch(url, options) {
+	const method = options && options.method ? options.method : "GET";
+
+	return new Promise((resolve, reject) => {
+		const xhttp = new XMLHttpRequest();
+		xhttp.open(method, url);
+
+		if (options && options.headers) {
+			Object.entries(options.headers).forEach(([key, val]) => {
+				xhttp.setRequestHeader(key, val);
+			});
+		}
+
+		xhttp.onreadystatechange = function () {
+			if (
+				this.readyState == 4 &&
+				this.status >= 200 &&
+				this.status < 300
+			) {
+				resolve({
+					json() {
+						return Promise.resolve(JSON.parse(xhttp.response));
+					},
+				});
+			}
+		};
+		options && options.body ? xhttp.send(options.body) : xhttp.send();
+	});
+}
+
+myFetch("https://jsonplaceholder.typicode.com/posts/1")
+	.then((response) => response.json())
+	.then((json) => console.log(json));
+
+myFetch("https://jsonplaceholder.typicode.com/posts", {
+	method: "POST",
+	body: JSON.stringify({
+		title: "foo",
+		body: "bar",
+		userId: 1,
+	}),
+	headers: {
+		"Content-type": "application/json; charset=UTF-8",
+	},
+})
+	.then((response) => response.json())
+	.then((json) => console.log(json));
