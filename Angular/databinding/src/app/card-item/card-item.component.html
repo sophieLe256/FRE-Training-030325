@@ -1,0 +1,11 @@
+<!-- <div class="card" *ngFor="let item of datalist"> -->
+    <div>
+        <h3>{{ item.title }}</h3>
+        <p>{{ item.body }}</p>
+        <button
+          [style]="{ 'background-color': item.color }"
+          (click)="changeTitleColor()"
+        >
+          set {{ item.color }}
+        </button>
+      </div>

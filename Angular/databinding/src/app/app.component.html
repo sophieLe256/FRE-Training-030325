@@ -1,0 +1,41 @@
+<!-- <div>
+  <button class="property" [disabled]="isdisabled">Target</button>
+  <button class="event" (click)="toggle()">toggle</button>
+</div>
+<hr />
+<div class="twoway">
+  <input type="text" [(ngModel)]="title" />
+</div> -->
+
+<div>
+  <h1 class="interplation" [style]="{ color: currentColor }">
+    {{ title }}
+  </h1>
+</div>
+
+<!-- <hr />
+ngIf
+<div>
+  <button *ngIf="isShow">testIf</button>
+  <button class="event" (click)="controlIfCondition()">
+    controlIfCondition
+  </button>
+</div>
+
+<hr />
+ngfor -->
+<div>
+  <app-card-item
+    *ngFor="let item of datalist"
+    [card]="item"
+    (emitColor)="changeTitleColor($event)"
+  ></app-card-item>
+</div>
+
+<!-- 
+if () {
+
+} -->
+<!-- for (let ele of arr) {
+
+}  -->
